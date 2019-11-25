@@ -1,0 +1,8 @@
+[flake8]
+exclude = .git, __pycache__, .env
+filename = *.py
+max-line-length = 120
+max-doc-length = 79
+select = E,W,F,C
+import-order-style = spoqa
+inline-quotes = '
