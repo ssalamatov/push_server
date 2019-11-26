@@ -124,9 +124,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-CELERY_BROKER_URL = 'redis://localhost:32768/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:32768/0'
+CELERY_BROKER_URL = 'redis://kubernetes.docker.internal:16379/0'
+CELERY_RESULT_BACKEND = 'redis://kubernetes.docker.internal:16379/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_NUMBER_RETRIES = 4
+

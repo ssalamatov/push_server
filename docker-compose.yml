@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - '16379:6379'
+    networks:
+      - project404_network
+  web:
+    build: .
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/src
+    ports:
+      - '8000:8000'
+    depends_on:
+      - redis
+    networks:
+      - project404_network
+  celery:
+    build: .
+    command: celery -A project404.celery worker -E -l info
+    volumes:
+      - .:/src
+    depends_on:
+      - redis
+    networks:
+      - project404_network
+
+networks:
+  project404_network:
+    external: true
