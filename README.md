@@ -1,22 +1,15 @@
 # Test project
 
-### Выбор инструментов
+### Стэк
+Для проекта выбрал Django Rest Framework и Celery.
 
-* Django + Django Rest Framework -
-Выбор был между Flask и Django, решил использовать Django, тк было больше опыта работы с ним + удобные дженерики. 
-
-* Celery -
-Используется для асинхронного вызова тасок (таска = пуш сообщения в мессенджер). 
-
-* Redis -
-В качестве брокера для селери выбрал редис, тк как нужные функции из ТЗ он поддерживает + есть опыт работы с ним
-
-* SQLite -
-Проект достаточно простой в плане требований к БД, хватило локальной БД
+Django Rest Framework как web-фреймворк для создания АПИ. У него довольно удобные дженерики, не нужно писать шаблонный код.
+Celery нужна для пуша сообщений в мессенджер, сама отправка должна происходить асинхронно в фоновом режиме. В качестве брокера для селери выбрал Redis, тк как нужные функции из ТЗ он поддерживает + есть опыт работы с ним. SQLite - как БД для хранения моделей, проект достаточно простой в плане требований к БД
 
 
 ### Деплой
 Проект разворачивается под докером, сценарий развертывания лежит в [docker-comppose.yml](https://github.com/ssalamatov/project404/blob/master/docker-compose.yml), для запуска достаточно будет запустить [setup.sh](https://github.com/ssalamatov/project404/blob/master/setup.sh) (лежит в корне проекта), он развернет 3 контейнера с django-сервером, редисом и селери, подтянет зависимости из [requirements.txt](https://github.com/ssalamatov/project404/blob/master/requirements.txt) и запустит тестовый сервер ```0.0.0.0:8000```.
+Если селери не сможет подключиться к редису, то нужно поправить адрес подключения (параметр ```CELERY_BROKER_URL``` из [settings.py](https://github.com/ssalamatov/project404/blob/master/project404/settings.py))
 
 
 ### Пример использования:
@@ -25,6 +18,23 @@ curl -i -X POST -H 'Content-Type: application/json' "http://127.0.0.1:8000/messa
 ```
 
 В примере выше делается POST-запрос, в теле списком передаются сообщения для пуша, для отложенных сообщений необходимо указывать ```start_at``` поле с временем отправки, связка ```('user_id', 'messenger_id', 'text')``` должна быть уникальной для избежания дублирования сообщений.
+
+Пример с дублированием:
+```
+❯ curl -s -X POST -H 'Content-Type: application/json' "http://127.0.0.1:8000/messages/" -d '[{"user_id": 123, "messenger_id": 1, "text": "deq"},{"user_id": 123, "messenger_id": 1, "text": "1"}]' | jq '.'
+[
+  {
+    "non_field_errors": [
+      "The fields user_id, messenger_id, text must make a unique set."
+    ]
+  },
+  {
+    "non_field_errors": [
+      "The fields user_id, messenger_id, text must make a unique set."
+    ]
+  }
+]
+``` 
 
 
 ### Документация
