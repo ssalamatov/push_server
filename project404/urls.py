@@ -1,4 +1,3 @@
-
 from django.urls import path
 from django.conf.urls import url
 
@@ -8,13 +7,13 @@ from rest_framework import permissions
 from push_api import views
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title='API',
-      default_version='v1',
-      description='Test description'
-   ),
-   public=True,
-   permission_classes=(permissions.AllowAny,),
+    openapi.Info(
+        title='API',
+        default_version='v1',
+        description='Test description'
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns = [
