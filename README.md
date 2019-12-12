@@ -1,11 +1,8 @@
-# Test project
+# Push server
 
 ### Стэк
-Для проекта выбрал Django Rest Framework и Celery.
 
-Django Rest Framework как web-фреймворк для создания АПИ. У него довольно удобные дженерики, не нужно писать шаблонный код.
-Celery нужна для пуша сообщений в мессенджер, сама отправка должна происходить асинхронно в фоновом режиме. В качестве брокера для селери выбрал Redis, тк как нужные функции из ТЗ он поддерживает + есть опыт работы с ним. SQLite - как БД для хранения моделей, проект достаточно простой в плане требований к БД
-
+* Django Rest Framework, Celery.
 
 ### Деплой
 Проект разворачивается под докером, сценарий развертывания лежит в [docker-comppose.yml](https://github.com/ssalamatov/project404/blob/master/docker-compose.yml), для запуска достаточно будет запустить [setup.sh](https://github.com/ssalamatov/project404/blob/master/setup.sh) (лежит в корне проекта), он развернет 3 контейнера с django-сервером, редисом и селери, подтянет зависимости из [requirements.txt](https://github.com/ssalamatov/project404/blob/master/requirements.txt) и запустит тестовый сервер ```0.0.0.0:8000```.
@@ -39,7 +36,3 @@ curl -i -X POST -H 'Content-Type: application/json' "http://127.0.0.1:8000/messa
 
 ### Документация
 Описание спецификации сделано в формате OpenAPI, можно посмотреть в файле [openapi.json](https://github.com/ssalamatov/project404/blob/master/docs/openapi.json)
-
-
-### Особенности:
-В конфиг добавил ключ ```CELERY_NUMBER_RETRIES```, через него указывается кол-во повторений для сфэйленных тасок.
